@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvelle figure
+{% endblock %}
+
+{% block body %}
+	<h1>Créer une nouvelle figure</h1> {{ include('figure/_form.html.twig') }}
+
+	<a href="{{ path('home') }}">Retour à la liste</a>
+{% endblock %}
