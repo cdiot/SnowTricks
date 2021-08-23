@@ -33,7 +33,7 @@ class AppFixtures extends Fixture
         // Create 6 products
         for ($j = 1; $j < 10; $j++) {
             $figure = new Figure();
-            $today = new \DateTimeImmutable();
+            $today = new DateTime();
             $tomorrow = $today->modify('+1 day');
             $figure->setTitle('titre ' . $j)
                 ->setSlug('slug ' . $j)
