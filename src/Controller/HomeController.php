@@ -31,7 +31,7 @@ class HomeController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="figure_show", methods={"GET"})
+     * @Route("/show/{id}", name="figure_show", methods={"GET"})
      */
     public function show(Figure $figure): Response
     {
