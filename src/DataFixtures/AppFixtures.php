@@ -11,24 +11,21 @@ use Symfony\Component\Validator\Constraints\Date;
 
 class AppFixtures extends Fixture
 {
+    public $categoriesData = ['Basic', 'Other', 'Freestyle'];
+
+
     public function load(ObjectManager $manager)
     {
-        // Create 2 category
-        $categories = [
-            1 => [
-                'name' => 'Basic'
-            ],
-            2 => [
-                'name' => 'Other'
-            ],
-        ];
-        foreach ($categories as $key => $value) {
+
+        $categories = [];
+        foreach ($this->categoriesData as $categoryName) {
             $category = new Category();
-
-            $category->setName($value['name']);
-
+            $category->setName($categoryName);
             $manager->persist($category);
+            $categories[] = $category;
         }
+
+
 
         // Create 6 products
         for ($j = 1; $j < 10; $j++) {
@@ -39,7 +36,7 @@ class AppFixtures extends Fixture
                 ->setSlug('slug ' . $j)
                 ->setContent('content ' . $j)
                 ->setPublishedAt($tomorrow)
-                ->setCategory($category);
+                ->setCategory($categories[array_rand($categories)]);
 
             $manager->persist($figure);
         }
