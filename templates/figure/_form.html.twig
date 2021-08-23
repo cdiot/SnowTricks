@@ -1,0 +1,7 @@
+<hr> {{ form_start(form) }}
+<div class="row">
+	<div class="col-md-12">{{ form_row(form.title) }}</div>
+	<div class="col-md-6">{{ form_row(form.slug) }}</div>
+	<div class="col-md-6">{{ form_row(form.content) }}</div>
+	<button class="btn">{{ button_label|default('Enregistrer') }}</button>
+</div> {{ form_end(form) }}

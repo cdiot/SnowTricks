@@ -33,7 +33,7 @@ class Figure
     private $content;
 
     /**
-     * @ORM\Column(type="datetime_immutable")
+     * @ORM\Column(type="datetime")
      */
     private $publishedAt;
 
@@ -84,12 +84,12 @@ class Figure
         return $this;
     }
 
-    public function getPublishedAt(): ?\DateTimeImmutable
+    public function getPublishedAt(): ?\DateTime
     {
         return $this->publishedAt;
     }
 
-    public function setPublishedAt(\DateTimeImmutable $publishedAt): self
+    public function setPublishedAt(\DateTime $publishedAt): self
     {
         $this->publishedAt = $publishedAt;
 
