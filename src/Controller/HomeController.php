@@ -29,14 +29,4 @@ class HomeController extends AbstractController
             'figures' => $figures
         ]);
     }
-
-    /**
-     * @Route("/{id}", name="figure_show", methods={"GET"})
-     */
-    public function show(Figure $figure): Response
-    {
-        return $this->render('figure/show.html.twig', [
-            'figure' => $figure,
-        ]);
-    }
 }
