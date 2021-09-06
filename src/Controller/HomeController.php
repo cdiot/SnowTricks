@@ -22,11 +22,20 @@ class HomeController extends AbstractController
      */
     public function index(): Response
     {
-
         $figures = $this->entityManager->getRepository(Figure::class)->findAll();
 
         return $this->render('home/index.html.twig', [
             'figures' => $figures
+        ]);
+    }
+
+    /**
+     * @Route("show/{slug}", name="show", methods={"GET"})
+     */
+    public function show(Figure $figure): Response
+    {
+        return $this->render('home/show.html.twig', [
+            'figure' => $figure,
         ]);
     }
 }

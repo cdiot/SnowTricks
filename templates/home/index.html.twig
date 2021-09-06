@@ -23,7 +23,7 @@
 							<div class="card-body">
 								<h3 class="mb-0">
 									<a class="text-dark" href="#">
-										<a href="#">{{ figure.title }}</a>
+										<a href="{{ path('show', {'slug': figure.slug}) }}">{{ figure.title }}</a>
 										<a href="{{ path('edit', {'id': figure.id}) }}"><img src="{{ asset('assets/img/pencil.png') }}" class="mx-2" alt="Mon panier" height="20px"></a>
 										<a href="{{ path('delete', {'id': figure.id}) }}"><img src="{{ asset('assets/img/trash.png') }}" class="mx-2" alt="Mon panier" height="20px"></a>
 									</h3>

@@ -6,6 +6,7 @@ use App\Entity\Figure;
 use App\Form\FigureType;
 use App\Repository\FigureRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,32 +23,22 @@ class FigureController extends AbstractController
 
     /**
      * @Route("/figure/new", name="new", methods={"GET","POST"})
+     *  @IsGranted("ROLE_USER")
      */
     public function new(Request $request): Response
     {
-        $figure = new Figure();
-        $figure->setPublishedAt(new \DateTime('now'));
-        $form = $this->createForm(FigureType::class, $figure);
+        $form = $this->createForm(FigureType::class);
         $form->handleRequest($request);
-        $figure = $form->getData();
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->entityManager->persist($form->getData());
+            $this->entityManager->flush();
+            $this->addFlash('notification', 'Une nouvelle figure viens d\'etre ajouter !');
 
-            $search_figure = $this->entityManager->getRepository(Figure::class)->findOneByTitle($figure->getTitle());
-            if (!$search_figure) {
-                $this->entityManager->persist($figure);
-                $this->entityManager->flush();
-
-                $this->addFlash('notification', 'Une nouvelle figure viens d\'etre ajouter !');
-
-                return $this->redirectToRoute('home');
-            } else {
-                $this->addFlash('notification', 'Cette figure existe déjà !');
-            }
+            return $this->redirectToRoute('home');
         }
 
         return $this->renderForm('figure/new.html.twig', [
-            'figure' => $figure,
             'form' => $form
         ]);
     }
@@ -61,7 +52,7 @@ class FigureController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $this->entityManager->flush();
 
             $this->addFlash('notification', 'La figure viens d\'etre modifier !');
 
@@ -75,7 +66,7 @@ class FigureController extends AbstractController
     }
 
     /**
-     * @Route("/figure//{id}/delete", name="delete", methods={"GET","POST"})
+     * @Route("/figure/{id}/delete", name="delete", methods={"GET","POST"})
      */
     public function delete(Request $request, Figure $figure): Response
     {

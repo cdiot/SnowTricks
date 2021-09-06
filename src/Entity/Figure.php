@@ -3,10 +3,14 @@
 namespace App\Entity;
 
 use App\Repository\FigureRepository;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=FigureRepository::class)
+ * //TODO mettre à jour message de validation
+ * @UniqueEntity(fields={"title"}, message="TODO")
  */
 class Figure
 {
@@ -18,7 +22,7 @@ class Figure
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
      */
     private $title;
 
@@ -42,6 +46,12 @@ class Figure
      * @ORM\JoinColumn(nullable=false)
      */
     private $category;
+
+
+    public function __construct()
+    {
+        $this->publishedAt = new \DateTime();
+    }
 
     public function getId(): ?int
     {
