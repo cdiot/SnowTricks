@@ -50,15 +50,26 @@ class Figure
     private $category;
 
     /**
-     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="relation")
+     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="figure")
      */
     private $comments;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Illustration::class, mappedBy="images")
+     */
+    private $illustrations;
+
+    /**
+     * @ORM\Column(type="array")
+     */
+    private $videos = [];
 
 
     public function __construct()
     {
         $this->publishedAt = new \DateTime();
         $this->comments = new ArrayCollection();
+        $this->illustrations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -138,7 +149,7 @@ class Figure
     {
         if (!$this->comments->contains($comment)) {
             $this->comments[] = $comment;
-            $comment->setRelation($this);
+            $comment->setFigure($this);
         }
 
         return $this;
@@ -148,10 +159,52 @@ class Figure
     {
         if ($this->comments->removeElement($comment)) {
             // set the owning side to null (unless already changed)
-            if ($comment->getRelation() === $this) {
-                $comment->setRelation(null);
+            if ($comment->getFigure() === $this) {
+                $comment->setFigure(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Illustration[]
+     */
+    public function getIllustrations(): Collection
+    {
+        return $this->illustrations;
+    }
+
+    public function addIllustration(Illustration $illustration): self
+    {
+        if (!$this->illustrations->contains($illustration)) {
+            $this->illustrations[] = $illustration;
+            $illustration->setImages($this);
+        }
+
+        return $this;
+    }
+
+    public function removeIllustration(Illustration $illustration): self
+    {
+        if ($this->illustrations->removeElement($illustration)) {
+            // set the owning side to null (unless already changed)
+            if ($illustration->getImages() === $this) {
+                $illustration->setImages(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getVideos(): ?array
+    {
+        return $this->videos;
+    }
+
+    public function setVideos(array $videos): self
+    {
+        $this->videos = $videos;
 
         return $this;
     }
