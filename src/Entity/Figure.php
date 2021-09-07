@@ -11,8 +11,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=FigureRepository::class)
- * //TODO mettre à jour message de validation
- * @UniqueEntity(fields={"title"}, message="TODO")
+ * @UniqueEntity(fields={"title"}, message="Ce titre existe deja.")
  */
 class Figure
 {

@@ -12,12 +12,27 @@
 		<div class="col-md-7 my-auto">
 			<h1 class="h3">{{figure.title}}</h1>
 			<span>{{figure.category.name}}
-				- Mise à jour le {{figure.publishedAt|date("m/d/Y") }}</span>
+				- Mise à jour le {{figure.publishedAt|date("d/m/Y") }}</span>
 
 			<p>{{figure.content}}</p>
 		</div>
 	</div>
 	<hr>
+	<div class="row pt-5">
+		{% for comment in figure.comments %}
+			<div>
+				<span>Posté le {{comment.createdAt|date("d/m/Y") }}
+					Par {{comment.user.getFullName}}</span>
+				<p>{{comment.message}}</p>
+			</div>
+		{% else %}
+			<p class="text-dark">Aucune commentaires</p>
+		{% endfor %}
+	</div>
+	{% if app.user %}
 
-
-{% endblock %}
+		{% if notification is defined %}
+			<div class="alert alert-info"> {{notification}}
+			</div>
+		{% endif %} {{ form(form) }}{% endif %}
+	{% endblock %}
