@@ -18,14 +18,20 @@
 					<div class="col-md-4">
 						<div class="card mb-4 box-shadow">
 							<div class="card-header text-center">
-								<img class="card-img-top" src="https://via.placeholder.com/300x200" alt="...">
+								{% for illustration in figure.illustrations %}
+									<div class="col-md-4">
+										<img src="{{ asset('/uploads/illustrations/' ~ illustration.name) }}" alt="Image" width="150">
+									</div>
+								{% endfor %}
 							</div>
 							<div class="card-body">
 								<h3 class="mb-0">
 									<a class="text-dark" href="#">
 										<a href="{{ path('show', {'slug': figure.slug}) }}">{{ figure.title }}</a>
-										<a href="{{ path('edit', {'id': figure.id}) }}"><img src="{{ asset('assets/img/pencil.png') }}" class="mx-2" alt="Mon panier" height="20px"></a>
-										<a href="{{ path('delete', {'id': figure.id}) }}"><img src="{{ asset('assets/img/trash.png') }}" class="mx-2" alt="Mon panier" height="20px"></a>
+										{% if app.user %}
+											<a href="{{ path('edit', {'slug': figure.slug}) }}"><img src="{{ asset('assets/img/pencil.png') }}" class="mx-2" alt="Mon panier" height="20px"></a>
+											<a href="{{ path('delete', {'slug': figure.slug}) }}"><img src="{{ asset('assets/img/trash.png') }}" class="mx-2" alt="Mon panier" height="20px"></a>
+										{% endif %}
 									</h3>
 								</div>
 							</div>

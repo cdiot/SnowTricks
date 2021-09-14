@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=FigureRepository::class)
@@ -33,6 +34,7 @@ class Figure
     private $slug;
 
     /**
+     * @Assert\Length(min=10)
      * @ORM\Column(type="text")
      */
     private $content;
@@ -54,7 +56,7 @@ class Figure
     private $comments;
 
     /**
-     * @ORM\OneToMany(targetEntity=Illustration::class, mappedBy="images")
+     * @ORM\OneToMany(targetEntity=Illustration::class, mappedBy="images", cascade={"persist"})
      */
     private $illustrations;
 

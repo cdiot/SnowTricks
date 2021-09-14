@@ -3,11 +3,15 @@
 namespace App\Controller;
 
 use App\Entity\Figure;
+use App\Entity\Illustration;
 use App\Form\FigureType;
+use App\Manager\FigureManager;
 use App\Repository\FigureRepository;
+use App\Service\FileUploader;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -25,14 +29,15 @@ class FigureController extends AbstractController
      * @Route("/figure/new", name="new", methods={"GET","POST"})
      *  @IsGranted("ROLE_USER")
      */
-    public function new(Request $request): Response
+    public function new(Request $request, FigureManager $figureManager, FileUploader $fileUploader): Response
     {
         $form = $this->createForm(FigureType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->entityManager->persist($form->getData());
-            $this->entityManager->flush();
+            $images = $form->get('files')->getData();
+
+            $figureManager->create($form->getData(), $images, $fileUploader);
             $this->addFlash('notification', 'Une nouvelle figure viens d\'etre ajouter !');
 
             return $this->redirectToRoute('home');
@@ -44,19 +49,19 @@ class FigureController extends AbstractController
     }
 
     /**
-     * @Route("/figure/{id}/edit", name="edit", methods={"GET","POST"})
+     * @Route("/figure/{slug}/edit", name="edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, Figure $figure): Response
+    public function edit(Request $request, Figure $figure, FigureManager $figureManager, FileUploader $fileUploader): Response
     {
         $form = $this->createForm(FigureType::class, $figure);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->entityManager->flush();
-
+            $images = $form->get('files')->getData();
+            $figureManager->create($form->getData(), $images, $fileUploader);
             $this->addFlash('notification', 'La figure viens d\'etre modifier !');
 
-            return $this->redirectToRoute('show');
+            return $this->redirectToRoute('show', ['slug' => $figure->getSlug()]);
         }
 
         return $this->renderForm('figure/edit.html.twig', [
@@ -66,7 +71,7 @@ class FigureController extends AbstractController
     }
 
     /**
-     * @Route("/figure/{id}/delete", name="delete", methods={"GET","POST"})
+     * @Route("/figure/{slug}/delete", name="delete", methods={"GET","POST"})
      */
     public function delete(Request $request, Figure $figure): Response
     {
@@ -76,5 +81,24 @@ class FigureController extends AbstractController
         $this->addFlash('notification', 'La figure viens d\'etre supprimer !');
 
         return $this->redirectToRoute('home');
+    }
+
+    /**
+     * @Route("/delete/illustration/{id}", name="delete_illustration", methods={"DELETE"})
+     */
+    public function deleteImage(Illustration $illustration, Request $request)
+    {
+        $data = json_decode($request->getContent(), true);
+
+        if ($this->isCsrfTokenValid('delete' . $illustration->getId(), $data['_token'])) {
+            $name = $illustration->getName();
+            unlink($this->getParameter('images_directory') . '/' . $name);
+            $this->entityManager->remove($illustration);
+            $this->entityManager->flush();
+
+            return new JsonResponse(['success' => 1]);
+        } else {
+            return new JsonResponse(['error' => 'Token Invalide'], 400);
+        }
     }
 }
