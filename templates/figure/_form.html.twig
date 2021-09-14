@@ -1,7 +1,18 @@
 <hr> {{ form_start(form) }}
-<div class="row">
-	<div class="col-md-12">{{ form_row(form.title) }}</div>
-	<div class="col-md-6">{{ form_row(form.slug) }}</div>
-	<div class="col-md-6">{{ form_row(form.content) }}</div>
-	<button class="btn">{{ button_label|default('Enregistrer') }}</button>
+<div
+	class="row p-5">
+	{# Vérifier si la route est "edit" on affiche les illustration #}
+	{% if app.request.attributes.get('_route') == 'edit' %}
+		<h2>Illustration</h2>
+		{% for illustration in figure.illustrations %}
+			<div class="col-md-4"><img src="{{ asset('/uploads/illustrations/' ~ illustration.name) }}" alt="Image" width="150">
+				<a href="{{ path('delete_illustration', {id: illustration.id}) }}" data-delete data-token="{{ csrf_token('delete' ~ illustration.id) }}">Supprimer</a>
+			</div>
+		{% endfor %}
+	{% endif %}
+	<div class="col-md-6">{{ form_row(form.title) }}</div>
+	<div class="col-md-6">{{ form_row(form.files) }}</div>
+	<div class="col-md-12">{{ form_row(form.content) }}</div>
+	<div class="col-md-12">{{ form_row(form.category) }}</div>
+	<button class="btn">{{ form_row(form.submit) }}</button>
 </div> {{ form_end(form) }}

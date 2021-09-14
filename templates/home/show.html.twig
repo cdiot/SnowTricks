@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {{ figure.title }}
+{% endblock %}
+
+{% block body %}
+
+	<div class="row pt-5">
+		<div class="col-md-5">
+			{% for illustration in figure.illustrations %}
+				<div class="col-md-4">
+					<img src="{{ asset('/uploads/illustrations/' ~ illustration.name) }}" alt="Image" width="150">
+				</div>
+			{% endfor %}
+		</div>
+		<div class="col-md-7 my-auto">
+			<h1 class="h3">{{figure.title}}</h1>
+			<span>{{figure.category.name}}
+				- Mise à jour le {{figure.publishedAt|date("d/m/Y") }}</span>
+
+			<p>{{figure.content}}</p>
+		</div>
+	</div>
+	<hr>
+	<div class="row pt-5">
+		{% for comment in comments %}
+			<div>
+				<span>Posté le {{comment.createdAt|date("d/m/Y") }}
+					Par {{comment.user.getFullName}}</span>
+				<p>{{comment.message}}</p>
+			</div>
+		{% else %}
+			<p class="text-dark">Aucune commentaires n'a encore était ajouté.</p>
+		{% endfor %}
+		{% if previous >= 0 %}
+
+			<a href="{{ path('show', { slug: figure.slug, offset: previous }) }}">Previous</a>
+
+		{% endif %}
+
+		{% if next < comments|length %}
+
+			<a href="{{ path('show', { slug: figure.slug, offset: next }) }}">Next</a>
+
+		{% endif %}
+	</div>
+	{% if app.user %}
+
+		{% if notification is defined %}
+			<div class="alert alert-info"> {{notification}}
+			</div>
+		{% endif %} {{ form(form) }}
+			{% else %}
+				<p class="text-dark">Vous devez etre connecter pour ajouter un commentaire.</p>
+		{% endif %}
+	{% endblock %}
