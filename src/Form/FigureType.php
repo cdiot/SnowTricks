@@ -50,6 +50,13 @@ class FigureType extends AbstractType
                 'multiple' => false,
                 'expanded' => false
             ])
+            ->add('videos', CollectionType::class, [
+                'entry_type' => VideoType::class,
+                'entry_options' => ['label' => false],
+                'allow_add' => true,
+                'by_reference' => false,
+                'allow_delete' => true
+            ])
             ->add('submit', SubmitType::class, [
                 'label' => "Enregister"
             ]);
