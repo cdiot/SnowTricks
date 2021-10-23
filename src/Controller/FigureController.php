@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Figure;
 use App\Entity\Illustration;
+use App\Entity\Video;
 use App\Form\FigureType;
 use App\Manager\FigureManager;
 use App\Repository\FigureRepository;
@@ -27,17 +28,24 @@ class FigureController extends AbstractController
 
     /**
      * @Route("/figure/new", name="new", methods={"GET","POST"})
-     *  @IsGranted("ROLE_USER")
+     * @IsGranted("figure_add")
      */
-    public function new(Request $request, FigureManager $figureManager, FileUploader $fileUploader): Response
+    public function new(Request $request, FigureManager $figureManager): Response
     {
-        $form = $this->createForm(FigureType::class);
+
+        $figure = new Figure();
+
+        // dummy code - add some example tags to the task
+        // (otherwise, the template will render an empty list of tags)
+
+
+        $form = $this->createForm(FigureType::class, $figure);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $images = $form->get('files')->getData();
 
-            $figureManager->create($form->getData(), $images, $fileUploader);
+            $figureManager->create($form->getData(), $images);
             $this->addFlash('notification', 'Une nouvelle figure viens d\'etre ajouter !');
 
             return $this->redirectToRoute('home');
@@ -50,15 +58,18 @@ class FigureController extends AbstractController
 
     /**
      * @Route("/figure/{slug}/edit", name="edit", methods={"GET","POST"})
+     * @IsGranted("figure_edit", subject="figure")
      */
-    public function edit(Request $request, Figure $figure, FigureManager $figureManager, FileUploader $fileUploader): Response
+    public function edit(Request $request, Figure $figure, FigureManager $figureManager): Response
     {
+        $this->denyAccessUnlessGranted('figure_edit', $figure);
         $form = $this->createForm(FigureType::class, $figure);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $images = $form->get('files')->getData();
-            $figureManager->create($form->getData(), $images, $fileUploader);
+
+            $figureManager->create($form->getData(), $images);
             $this->addFlash('notification', 'La figure viens d\'etre modifier !');
 
             return $this->redirectToRoute('show', ['slug' => $figure->getSlug()]);
@@ -72,6 +83,7 @@ class FigureController extends AbstractController
 
     /**
      * @Route("/figure/{slug}/delete", name="delete", methods={"GET","POST"})
+     * @IsGranted("figure_delete", subject="figure")
      */
     public function delete(Request $request, Figure $figure): Response
     {
@@ -85,11 +97,11 @@ class FigureController extends AbstractController
 
     /**
      * @Route("/delete/illustration/{id}", name="delete_illustration", methods={"DELETE"})
+     * @IsGranted("figure_delete")
      */
     public function deleteImage(Illustration $illustration, Request $request)
     {
         $data = json_decode($request->getContent(), true);
-
         if ($this->isCsrfTokenValid('delete' . $illustration->getId(), $data['_token'])) {
             $name = $illustration->getName();
             unlink($this->getParameter('images_directory') . '/' . $name);

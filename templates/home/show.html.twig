@@ -8,8 +8,8 @@
 	<div class="row pt-5">
 		<div class="col-md-5">
 			{% for illustration in figure.illustrations %}
-				<div class="col-md-4">
-					<img src="{{ asset('/uploads/illustrations/' ~ illustration.name) }}" alt="Image" width="150">
+				<div class="m-1">
+					<img src="{{ asset('/uploads/illustrations/' ~ illustration.name) }}" alt="{{ illustration.name }}" width="150">
 				</div>
 			{% endfor %}
 		</div>
@@ -17,16 +17,23 @@
 			<h1 class="h3">{{figure.title}}</h1>
 			<span>{{figure.category.name}}
 				- Mise à jour le {{figure.publishedAt|date("d/m/Y") }}</span>
-
 			<p>{{figure.content}}</p>
 		</div>
+
+		{% for video in figure.videos %}
+			<div class="col-md-3">
+				<iframe width="280" height="157" src="{{video.url}}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+			</div>
+		{% endfor %}
+
 	</div>
 	<hr>
 	<div class="row pt-5">
 		{% for comment in comments %}
 			<div>
-				<span>Posté le {{comment.createdAt|date("d/m/Y") }}
-					Par {{comment.user.getFullName}}</span>
+				<span class="d-flex"> {{dicebear(comment.user)}}
+					Posté le {{comment.createdAt|date("d/m/Y") }}
+					Par {{comment.user.fullName}}</span>
 				<p>{{comment.message}}</p>
 			</div>
 		{% else %}
@@ -34,13 +41,13 @@
 		{% endfor %}
 		{% if previous >= 0 %}
 
-			<a href="{{ path('show', { slug: figure.slug, offset: previous }) }}">Previous</a>
+			<a href="{{ path('show', { slug: figure.slug, offset: previous }) }}">Avant</a>
 
 		{% endif %}
 
 		{% if next < comments|length %}
 
-			<a href="{{ path('show', { slug: figure.slug, offset: next }) }}">Next</a>
+			<a href="{{ path('show', { slug: figure.slug, offset: next }) }}">Aprés</a>
 
 		{% endif %}
 	</div>

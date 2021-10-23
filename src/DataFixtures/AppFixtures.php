@@ -5,22 +5,33 @@ namespace App\DataFixtures;
 use App\Entity\Category;
 use App\Entity\Comment;
 use App\Entity\Figure;
+use App\Entity\Illustration;
 use App\Entity\User;
+use App\Entity\Video;
+use App\Service\FileUploader;
 use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Validator\Constraints\Date;
 
 class AppFixtures extends Fixture
 {
-    private $categoriesData = ['Basic', 'Other', 'Freestyle'];
+    private $categoriesData = ['Basique', 'Freestyle', 'Autres'];
 
     private $passwordHasher;
 
-    public function __construct(UserPasswordHasherInterface $passwordHasher)
+    private $filesystem;
+
+    private $fileUploader;
+
+    public function __construct(UserPasswordHasherInterface $passwordHasher, Filesystem $filesystem, FileUploader $fileUploader)
     {
         $this->passwordHasher = $passwordHasher;
+        $this->filesystem = $filesystem;
+        $this->fileUploader =  $fileUploader;
     }
 
 
@@ -36,7 +47,7 @@ class AppFixtures extends Fixture
 
 
 
-        // Create 6 figures
+        // Create 11 figures
         $figures = [];
         for ($j = 1; $j < 11; $j++) {
             $figure = new Figure();
@@ -48,11 +59,34 @@ class AppFixtures extends Fixture
                 ->setPublishedAt($tomorrow)
                 ->setCategory($categories[array_rand($categories)]);
 
+            // 2 Images
+            for ($k = 1; $k < 2; $k++) {
+                $this->filesystem->copy(__DIR__ . '/img/' . $k . '.jpg', __DIR__ . 'tmp.jpg');
+                $file = new UploadedFile(__DIR__ . 'tmp.jpg', "Figure_{$j}_{$k}.jpg", null, null, true);
+
+
+                $illustration = new Illustration();
+                $illustration->setName($this->fileUploader->upload($file))
+                    ->setImages($figure);
+
+                $manager->persist($illustration);
+            }
+
+            // 1 to 3 Video
+            for ($l = 0; $l < mt_rand(1, 3); $l++) {
+                $video = new Video();
+                $video->setUrl('https://www.youtube.com/embed/V9xuy-rVj9w')
+                    ->setFigure($figure);
+
+                $manager->persist($video);
+            }
+
+
             $manager->persist($figure);
             $figures[] = $figure;
         }
 
-        // Create 1 user
+        // Create 1 spécific user
         $user = new User();
         $user->setFirstname('thomas');
         $user->setLastname('sewogi');
@@ -65,10 +99,25 @@ class AppFixtures extends Fixture
         ));
         $manager->persist($user);
 
-        // Create 1 comment
+        // Create 2 user
+        for ($i = 0; $i < 2; $i++) {
+            $user = new User();
+            $user->setFirstname('prenom' . $i);
+            $user->setLastname('nom' . $i);
+            $user->setEmail('user' . $i . '@gmail.com');
+            $user->setIsVerified(true);
 
-        for ($k = 0; $k < 15; $k++) {
-            $mots = ['salut', 'bonjour', 'aurevoir', 'joker'];
+            $user->setPassword($this->passwordHasher->hashPassword(
+                $user,
+                '123456' . $i
+            ));
+            $manager->persist($user);
+        }
+
+        // Create * comment
+
+        for ($k = 0; $k < 100; $k++) {
+            $mots = ['Salut super figure !!', 'Bonjour j\'adore !', 'Pas mal...', 'Pas ouf du tout.', 'Bravo!!', 'Génial!', 'Continue.'];
             $num = rand(0, 3);
             $comment = new Comment();
             $today = new DateTime();

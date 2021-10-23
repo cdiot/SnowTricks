@@ -6,13 +6,13 @@
 {% block body %}
 	<div class="row pt-5">
 		<h3>Liste des figures</h3>
-		<div class="row">
+		<div class="list row">
 			{% if notification is defined %}
 				<div class="alert alert-info"> {{notification}}
 				</div>
 			{% endif %}
 			{% for figure in figures %}
-				<div class="col-md-4">
+				<div class="list-element col-md-4">
 					<div class="card mb-4 box-shadow">
 						<div class="card-header text-center">
 							{% for illustration in figure.illustrations %}
@@ -25,8 +25,10 @@
 							<h3 class="mb-0">
 								<a class="text-dark" href="#">
 									<a href="{{ path('show', {'slug': figure.slug}) }}">{{ figure.title }}</a>
-									{% if app.user %}
+									{% if is_granted('figure_edit',figure) %}
 										<a href="{{ path('edit', {'slug': figure.slug}) }}"><img src="{{ asset('assets/img/pencil.png') }}" class="mx-2" alt="Mon panier" height="20px"></a>
+									{% endif %}
+									{% if is_granted('figure_delete',figure) %}
 										<a href="{{ path('delete', {'slug': figure.slug}) }}"><img src="{{ asset('assets/img/trash.png') }}" class="mx-2" alt="Mon panier" height="20px"></a>
 									{% endif %}
 								</h3>
@@ -37,5 +39,11 @@
 					<p class="text-dark">Aucune figure</p>
 				{% endfor %}
 			</div>
+			<!-- Load More Button -->
+			<button class="btn btn-primary" id="loadmore" data-load-more-nb-element="3" data-load-more-element-selector=".list .list-element">Voir plus ></button>
 		</div>
+	{% endblock %}
+
+	{% block script %}
+		<script src="{{ asset('js/loadmore.js') }}"></script>
 	{% endblock %}

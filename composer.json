@@ -86,6 +86,9 @@
             "symfony console d:m:m -n",
             "symfony console d:f:l -n"
         ],
+        "test": [
+            "symfony php bin/phpunit --testdox"
+        ],
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
             "assets:install %PUBLIC_DIR%": "symfony-cmd"

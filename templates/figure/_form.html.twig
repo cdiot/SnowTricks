@@ -14,5 +14,14 @@
 	<div class="col-md-6">{{ form_row(form.files) }}</div>
 	<div class="col-md-12">{{ form_row(form.content) }}</div>
 	<div class="col-md-12">{{ form_row(form.category) }}</div>
+
+
+	<div class='col-md-12 videos' id="video_list" data-index="{{ form.videos|length }}" data-prototype="{{ form_widget(form.videos.vars.prototype)|e('html_attr') }}">
+		{% for video in form.videos %} {{ form_row(video.url) }}
+		{% endfor %}
+	</div>
+	<button type="button" class="btn btn-secondary add_item_link" data-collection-holder-id="video_list">Ajouter une vidéo</button>
+
+
 	<button class="btn">{{ form_row(form.submit) }}</button>
 </div> {{ form_end(form) }}

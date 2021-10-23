@@ -12,13 +12,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class FigureManager extends AbstractController
 {
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, FileUploader $fileUploader)
     {
         $this->em = $em;
+        $this->uploader = $fileUploader;
     }
 
 
-    public function create(Figure $figure, array $images, FileUploader $fileUploader)
+    public function create(Figure $figure, array $images)
     {
         //generate slug
         $slugger = new AsciiSlugger();
@@ -26,7 +27,7 @@ class FigureManager extends AbstractController
 
         //manage uploads
         foreach ($images as $image) {
-            $file = $fileUploader->upload($image);
+            $file = $this->uploader->upload($image);
 
             $img = new Illustration;
             $img->setName($file);

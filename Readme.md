@@ -28,3 +28,21 @@ symfony serve -d
 ```
 
 Vous pouvez configurer l'accès à la base de données dans le fichier .env
+
+### Lancer les fixtures
+Pour lancer des fixtures tapé les commandes suivantes :
+
+```bash
+composer reset
+```
+
+### Lancer des tests
+Pour lancer des tests tapé les commandes suivantes :
+
+```bash
+composer test
+```
+
+### codacy 
+
+* https://app.codacy.com/gh/cdiot/SnowTricks/dashboard
