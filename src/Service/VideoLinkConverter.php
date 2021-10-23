@@ -22,5 +22,6 @@ class VideoLinkConverter
             $url = "https://www.youtube.com/embed/" . $matches['id'];
             return $url;
         }
+        return $url;
     }
 }

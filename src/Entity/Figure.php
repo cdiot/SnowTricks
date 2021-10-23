@@ -51,12 +51,12 @@ class Figure
     private $category;
 
     /**
-     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="figure")
+     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="figure", cascade={"persist","remove"})
      */
     private $comments;
 
     /**
-     * @ORM\OneToMany(targetEntity=Illustration::class, mappedBy="images", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity=Illustration::class, mappedBy="images", cascade={"persist","remove"})
      */
     private $illustrations;
 

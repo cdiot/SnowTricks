@@ -8,9 +8,12 @@ use App\Entity\Figure;
 use App\Entity\Illustration;
 use App\Entity\User;
 use App\Entity\Video;
+use App\Service\FileUploader;
 use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Validator\Constraints\Date;
 
@@ -20,9 +23,15 @@ class AppFixtures extends Fixture
 
     private $passwordHasher;
 
-    public function __construct(UserPasswordHasherInterface $passwordHasher)
+    private $filesystem;
+
+    private $fileUploader;
+
+    public function __construct(UserPasswordHasherInterface $passwordHasher, Filesystem $filesystem, FileUploader $fileUploader)
     {
         $this->passwordHasher = $passwordHasher;
+        $this->filesystem = $filesystem;
+        $this->fileUploader =  $fileUploader;
     }
 
 
@@ -52,8 +61,12 @@ class AppFixtures extends Fixture
 
             // 2 Images
             for ($k = 1; $k < 2; $k++) {
+                $this->filesystem->copy(__DIR__ . '/img/' . $k . '.jpg', __DIR__ . 'tmp.jpg');
+                $file = new UploadedFile(__DIR__ . 'tmp.jpg', "Figure_{$j}_{$k}.jpg", null, null, true);
+
+
                 $illustration = new Illustration();
-                $illustration->setName($k . '.jpg')
+                $illustration->setName($this->fileUploader->upload($file))
                     ->setImages($figure);
 
                 $manager->persist($illustration);
@@ -73,7 +86,7 @@ class AppFixtures extends Fixture
             $figures[] = $figure;
         }
 
-        // Create 1 user
+        // Create 1 spécific user
         $user = new User();
         $user->setFirstname('thomas');
         $user->setLastname('sewogi');
@@ -85,6 +98,21 @@ class AppFixtures extends Fixture
             '123456'
         ));
         $manager->persist($user);
+
+        // Create 2 user
+        for ($i = 0; $i < 2; $i++) {
+            $user = new User();
+            $user->setFirstname('prenom' . $i);
+            $user->setLastname('nom' . $i);
+            $user->setEmail('user' . $i . '@gmail.com');
+            $user->setIsVerified(true);
+
+            $user->setPassword($this->passwordHasher->hashPassword(
+                $user,
+                '123456' . $i
+            ));
+            $manager->persist($user);
+        }
 
         // Create * comment
 
