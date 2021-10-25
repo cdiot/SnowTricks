@@ -85,7 +85,7 @@ class FigureController extends AbstractController
      * @Route("/figure/{slug}/delete", name="delete", methods={"GET","POST"})
      * @IsGranted("figure_delete", subject="figure")
      */
-    public function delete(Request $request, Figure $figure): Response
+    public function delete(Figure $figure): Response
     {
         $this->entityManager->remove($figure);
         $this->entityManager->flush();
@@ -109,8 +109,7 @@ class FigureController extends AbstractController
             $this->entityManager->flush();
 
             return new JsonResponse(['success' => 1]);
-        } else {
-            return new JsonResponse(['error' => 'Token Invalide'], 400);
         }
+        return new JsonResponse(['error' => 'Token Invalide'], 400);
     }
 }

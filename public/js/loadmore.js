@@ -6,9 +6,7 @@ let itemSelector = loadmore.dataset.loadMoreElementSelector;
 loadmore.addEventListener('click', (e) => {
     const elementList = [...document.querySelectorAll(itemSelector)];
     for (let i = currentItems; i < currentItems + nbElement; i++) {
-        if (elementList[i]) {
-            elementList[i].style.display = 'block';
-        }
+        elementList[i].style.display = 'block';
     }
     currentItems += nbElement;
 

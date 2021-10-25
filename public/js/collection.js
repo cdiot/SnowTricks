@@ -1,5 +1,5 @@
 const addFormToCollection = (e) => {
-    console.log(e.currentTarget.dataset);
+    //console.log(e.currentTarget.dataset);
     const collectionHolder = document.getElementById(e.currentTarget.dataset.collectionHolderId);
 
 

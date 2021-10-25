@@ -66,6 +66,11 @@ class Figure
      */
     private $videos;
 
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $createdAt;
+
 
 
     public function __construct()
@@ -74,6 +79,7 @@ class Figure
         $this->comments = new ArrayCollection();
         $this->illustrations = new ArrayCollection();
         $this->videos = new ArrayCollection();
+        $this->createdAt = new \DateTime();
     }
 
     public function getId(): ?int
@@ -232,6 +238,18 @@ class Figure
                 $video->setFigure(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTime
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTime $createdAt): self
+    {
+        $this->createdAt = $createdAt;
 
         return $this;
     }

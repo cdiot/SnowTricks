@@ -4,7 +4,18 @@
 {% endblock %}
 
 {% block body %}
-	<div class="row pt-5">
+	<div class="pt-5">
+		<h1 class="display-4">Bienvenue!</h1>
+		<p class="lead">Snowtricks est votre réseau social dédié aux figures de snowboard.</p>
+		<div class="row">
+			<div class="col-md">
+				<div class="d-flex justify-content-end">
+					<a class="btn btn-primary btn-sm" href="#figures">Descendre</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row pt-5" id="figures">
 		<h3>Liste des figures</h3>
 		<div class="list row">
 			{% if notification is defined %}
@@ -26,10 +37,10 @@
 								<a class="text-dark" href="#">
 									<a href="{{ path('show', {'slug': figure.slug}) }}">{{ figure.title }}</a>
 									{% if is_granted('figure_edit',figure) %}
-										<a href="{{ path('edit', {'slug': figure.slug}) }}"><img src="{{ asset('assets/img/pencil.png') }}" class="mx-2" alt="Mon panier" height="20px"></a>
+										<a href="{{ path('edit', {'slug': figure.slug}) }}"><img src="{{ asset('assets/img/pencil.png') }}" class="mx-2" alt="stylo" height="20px"></a>
 									{% endif %}
 									{% if is_granted('figure_delete',figure) %}
-										<a href="{{ path('delete', {'slug': figure.slug}) }}"><img src="{{ asset('assets/img/trash.png') }}" class="mx-2" alt="Mon panier" height="20px"></a>
+										<a href="{{ path('delete', {'slug': figure.slug}) }}"><img src="{{ asset('assets/img/trash.png') }}" class="mx-2" alt="poubelle" height="20px"></a>
 									{% endif %}
 								</h3>
 							</div>
@@ -41,6 +52,13 @@
 			</div>
 			<!-- Load More Button -->
 			<button class="btn btn-primary" id="loadmore" data-load-more-nb-element="3" data-load-more-element-selector=".list .list-element">Voir plus ></button>
+			<div class="row pt-5">
+				<div class="col-md">
+					<div class="d-flex justify-content-end">
+						<a class="btn btn-primary btn-sm" href="#figures">Monter</a>
+					</div>
+				</div>
+			</div>
 		</div>
 	{% endblock %}
 
