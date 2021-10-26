@@ -45,18 +45,45 @@ class AppFixtures extends Fixture
             $categories[] = $category;
         }
 
-        // Create 1 spécific user
-        $user = new User();
-        $user->setFirstname('thomas');
-        $user->setLastname('sewogi');
-        $user->setEmail('thomas@gmail.com');
-        $user->setIsVerified(true);
+        // Create 1 admin
+        $admin = new User();
+        $admin->setFirstname('takashi');
+        $admin->setLastname('Murakami');
+        $admin->setEmail('takashi@gmail.com');
+        $admin->setRoles(['ROLE_ADMIN']);
+        $admin->setIsVerified(true);
 
-        $user->setPassword($this->passwordHasher->hashPassword(
-            $user,
+        $admin->setPassword($this->passwordHasher->hashPassword(
+            $admin,
             '123456'
         ));
-        $manager->persist($user);
+        $manager->persist($admin);
+
+        // Create first user
+        $user1 = new User();
+        $user1->setFirstname('thomas');
+        $user1->setLastname('sewogi');
+        $user1->setEmail('thomas@gmail.com');
+        $user1->setIsVerified(true);
+
+        $user1->setPassword($this->passwordHasher->hashPassword(
+            $user1,
+            '123456'
+        ));
+        $manager->persist($user1);
+
+        // Create second user
+        $user2 = new User();
+        $user2->setFirstname('momonga');
+        $user2->setLastname('sewogi');
+        $user2->setEmail('momonga@gmail.com');
+        $user2->setIsVerified(true);
+
+        $user2->setPassword($this->passwordHasher->hashPassword(
+            $user2,
+            '123456'
+        ));
+        $manager->persist($user2);
 
 
         // Create 11 figures
@@ -70,7 +97,8 @@ class AppFixtures extends Fixture
                 ->setContent('La description en détails de ma figure numero ' . $j)
                 ->setCreatedAt($today)
                 ->setPublishedAt($tomorrow)
-                ->setCategory($categories[array_rand($categories)]);
+                ->setCategory($categories[array_rand($categories)])
+                ->setUser($user1);
 
             // 2 Images
             for ($k = 1; $k < 2; $k++) {
@@ -104,7 +132,7 @@ class AppFixtures extends Fixture
                 $comment->setMessage($mots[$num]);
                 $comment->setCreatedAt($tomorrow);
                 $comment->setFigure($figure);
-                $comment->setUser($user);
+                $comment->setUser($user1);
 
                 $manager->persist($comment);
             }

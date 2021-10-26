@@ -71,6 +71,12 @@ class Figure
      */
     private $createdAt;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="figures")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
+
 
 
     public function __construct()
@@ -250,6 +256,18 @@ class Figure
     public function setCreatedAt(\DateTime $createdAt): self
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }

@@ -61,9 +61,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $lastname;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Figure::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $figures;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
+        $this->figures = new ArrayCollection();
     }
 
     public function getFullName(): string
@@ -222,6 +228,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setLastname(string $lastname): self
     {
         $this->lastname = $lastname;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Figure[]
+     */
+    public function getFigures(): Collection
+    {
+        return $this->figures;
+    }
+
+    public function addFigure(Figure $figure): self
+    {
+        if (!$this->figures->contains($figure)) {
+            $this->figures[] = $figure;
+            $figure->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFigure(Figure $figure): self
+    {
+        if ($this->figures->removeElement($figure)) {
+            // set the owning side to null (unless already changed)
+            if ($figure->getUser() === $this) {
+                $figure->setUser(null);
+            }
+        }
 
         return $this;
     }
