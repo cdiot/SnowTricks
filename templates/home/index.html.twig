@@ -27,9 +27,11 @@
 					<div class="card mb-4 box-shadow">
 						<div class="card-header text-center">
 							{% for illustration in figure.illustrations %}
-								<div class="col-md-4">
+								{% if loop.first %}
 									<img src="{{ asset('/uploads/illustrations/' ~ illustration.name) }}" alt="Image" width="150">
-								</div>
+								{% endif %}
+							{% else %}
+								<img src="https://via.placeholder.com/300" alt="Image" width="250">
 							{% endfor %}
 						</div>
 						<div class="card-body">

@@ -19,13 +19,7 @@
 			</div>
 			<!-- Image 1 -->
 			<div class="card text-white mb-5">
-				{% for illustration in figure.illustrations %}
-					{% if loop.first %}
-						<img src="{{ asset('/uploads/illustrations/' ~ illustration.name) }}" alt="Image">
-					{% endif %}
-				{% else %}
-					<img src="https://via.placeholder.com/300" alt="Image">
-				{% endfor %}
+				<img src="{{ (figure.illustrations.first)? asset('/uploads/illustrations/' ~ figure.illustrations.first.name): "https://via.placeholder.com/300" }}" alt="Image">
 				<div class="card-img-overlay">
 					<h1 class="card-title text-center">{{ figure.title }}</h1>
 				</div>
