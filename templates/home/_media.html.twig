@@ -1,0 +1,21 @@
+<div id="media">
+	<div class="d-flex flex-row mb-3 flex-wrap">
+		{% if figure.illustrations %}
+			{% for illustration in figure.illustrations %}
+				<div class="card mb-3 col-11 col-md-3 col-lg-2 mx-md-2 p-0">
+					<img src="{{ asset('/uploads/illustrations/' ~ illustration.name) }}" alt="{{ illustration.name }}" class="card-img">
+				</div>
+
+			{% endfor %}
+		{% endif %}
+		<!-- Video -->
+		{% if figure.videos %}
+			{% for video in figure.videos %}
+				<div class="card mb-3 col-11 col-md-3 col-lg-2 mx-md-2 p-0">
+					<iframe width="auto" height="auto" src="{{video.url}}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+				</div>
+			{% endfor %}
+		{% endif %}
+	</div>
+</div>
+<button class="btn btn-primary" id="see">Voir Les  medias</button>

@@ -1,16 +1,53 @@
 .list-element {
     display: none;
 }
+
 .list .list-element:nth-child(1) {
     display: block;
 }
+
 .list .list-element:nth-child(2) {
     display: block;
 }
+
 .list .list-element:nth-child(3) {
     display: block;
 }
 
+@media screen and (max-width: 976px) {
+    #media {
+        display: none;
+    }
+
+    .nav-mobile {
+        display: block;
+    }
+
+    .nav-laptop {
+        display: none;
+    }
+
+  }
+
+  @media screen and (min-width: 976px) {
+    #see {
+        display: none;
+    }
+
+    .nav-laptop {
+        display: block;
+    }
+
+    .nav-mobile {
+        display: none;
+    }
+    
+  }
+
 a {
-    text-decoration:none;
+    text-decoration: none;
+}
+
+li, ul {
+    list-style: none;
 }

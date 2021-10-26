@@ -21,9 +21,9 @@ class CommentType extends AbstractType
                 ]
             ])
             ->add('submit', SubmitType::class, [
-                'label' => "Envoyé mon commentaire",
+                'label' => "Envoyé",
                 'attr' => [
-                    'class' => 'btn btn-success btn-block'
+                    'class' => 'btn btn-success btn-sm mx-2'
                 ]
             ]);
     }

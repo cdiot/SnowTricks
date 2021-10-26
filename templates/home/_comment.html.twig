@@ -1,0 +1,33 @@
+<div class="d-flex flex-column align-items-center my-4">
+	{% for comment in comments %}
+		<div class="card mb-3">
+			<div class="row g-0">
+				<div class="col-2"> {{dicebear(comment.user)}}
+				</div>
+				<div class="col-10">
+					<div class="card-body">
+						<h5 class="card-title">Par {{comment.user.fullName}}</h5>
+						<p class="card-text">{{comment.message}}</p>
+						<p class="card-text">
+							<small class="text-muted">Le {{ comment.createdAt|date('d/m/Y à H:i') }}</small>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	{% else %}
+		<p class="text-dark">Aucune commentaires n'a encore était ajouté.</p>
+	{% endfor %}
+	{% if previous >= 0 %}
+
+		<a href="{{ path('show', { slug: figure.slug, offset: previous }) }}">Avant</a>
+
+	{% endif %}
+
+	{% if next < comments|length %}
+
+		<a href="{{ path('show', { slug: figure.slug, offset: next }) }}">Aprés</a>
+
+	{% endif %}
+
+</div>

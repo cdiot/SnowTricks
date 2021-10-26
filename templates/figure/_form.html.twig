@@ -3,6 +3,7 @@
 	class="row p-5">
 	{# Vérifier si la route est "edit" on affiche les illustration #}
 	{% if app.request.attributes.get('_route') == 'edit' %}
+		<div class="col-md-12">{{ form_row(form.title) }}</div>
 		<h2>Illustration</h2>
 		{% for illustration in figure.illustrations %}
 			<div class="col-md-4"><img src="{{ asset('/uploads/illustrations/' ~ illustration.name) }}" alt="Image" width="150">
@@ -10,18 +11,26 @@
 			</div>
 		{% endfor %}
 	{% endif %}
-	<div class="col-md-6">{{ form_row(form.title) }}</div>
+
 	<div class="col-md-6">{{ form_row(form.files) }}</div>
-	<div class="col-md-12">{{ form_row(form.content) }}</div>
-	<div class="col-md-12">{{ form_row(form.category) }}</div>
 
 
 	<div class='col-md-12 videos' id="video_list" data-index="{{ form.videos|length }}" data-prototype="{{ form_widget(form.videos.vars.prototype)|e('html_attr') }}">
 		{% for video in form.videos %} {{ form_row(video.url) }}
 		{% endfor %}
 	</div>
+
 	<button type="button" class="btn btn-secondary add_item_link" data-collection-holder-id="video_list">Ajouter une vidéo</button>
 
+	<div class="col-md-12">{{ form_row(form.content) }}</div>
+	<div class="col-md-12">{{ form_row(form.category) }}</div>
 
-	<button class="btn">{{ form_row(form.submit) }}</button>
+	<div class="d-flex justify-content-end">
+		{% if figure is defined %}
+			{% if is_granted('figure_delete',figure) %}
+				<a class="btn btn-sm btn-danger" href="{{ path('delete', {'slug': figure.slug}) }}">Supprimer la figure</a>
+			{% endif %}
+		{% endif %}
+		<button class="btn">{{ form_row(form.submit) }}</button>
+	</div>
 </div> {{ form_end(form) }}

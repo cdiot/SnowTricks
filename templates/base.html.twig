@@ -8,7 +8,7 @@
 			{% endblock %}
 		</title>
 		{# Run `composer require symfony/webpack-encore-bundle`
-																																																																												and uncomment the following Encore helpers to start using Symfony UX #}
+																																																																																																																																																														and uncomment the following Encore helpers to start using Symfony UX #}
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 		{% block stylesheets %}
 			{#{{ encore_entry_link_tags('app') }}#}
@@ -21,35 +21,66 @@
 	</head>
 	<body>
 		<header>
-			<nav class="navbar navbar-expand-lg navbar-light bg-light">
-				<div class="container-fluid">
-					<span class="navbar-brand" href="#">SnowTricks</span>
-					<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-						<span class="navbar-toggler-icon"></span>
-					</button>
-					<div class="collapse navbar-collapse" id="navbarText">
-						<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+			<div class="nav-laptop">
+				<nav class="navbar navbar-expand-lg navbar-light bg-light">
+					<div class="container-fluid">
+						<span class="navbar-brand" href="#">SnowTricks</span>
+						<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+							<span class="navbar-toggler-icon"></span>
+						</button>
+						<div class="collapse navbar-collapse" id="navbarText">
+							<ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+								<li class="nav-item">
+									<a class="nav-link active" aria-current="page" href="{{ path('home') }}">Liste des figures</a>
+								</li>
+								{% if app.user %}
+									<li class="nav-item">
+										<a class="nav-link" href="{{ path('new') }}">Ajouter une nouvelle figure</a>
+									</li>
+								{% endif %}
+								{% if app.user %}
+									<li class="nav-item">
+										<a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
+									</li>
+								{% else %}
+									<li class="nav-item">
+										<a class="nav-link" href="{{ path('app_login') }}">Connexion</a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link" href="{{ path('app_register') }}">Inscription</a>
+									</li>
+								{% endif %}
+							</ul>
+						</div>
+					</div>
+				</nav>
+			</div>
+			<div class="nav-mobile">
+				<nav class="navbar navbar-expand-lg fixed-bottom navbar-light bg-light">
+					<div class="container-fluid">
+						<ul class="d-flex mx-auto justify-content-center">
 							<li class="nav-item">
-								<a class="nav-link active" aria-current="page" href="{{ path('home') }}">Liste des figures</a>
+								<a class="nav-link active" aria-current="page" href="{{ path('home') }}"><img src="{{ asset('assets/img/home.png') }}" class="mx-2" alt="stylo" height="20px"></a>
 							</li>
 							{% if app.user %}
 								<li class="nav-item">
-									<a class="nav-link active" aria-current="page" href="{{ path('new') }}">Ajouter une nouvelle figure</a>
+									<a class="nav-link" href="{{ path('new') }}"><img src="{{ asset('assets/img/add.png') }}" class="mx-2" alt="stylo" height="20px"></a>
+								</li>
+							{% endif %}
+							{% if app.user %}
+								<li class="nav-item">
+									<a class="nav-link" href="{{ path('app_logout') }}"><img src="{{ asset('assets/img/logout.png') }}" class="mx-2" alt="stylo" height="20px"></a>
+								</li>
+							{% else %}
+								<li class="nav-item">
+									<a class="nav-link" href="{{ path('app_login') }}"><img src="{{ asset('assets/img/login.png') }}" class="mx-2" alt="stylo" height="20px"></a>
 								</li>
 							{% endif %}
 						</ul>
-						<span class="navbar-text">
-							{% if app.user %}
-								<a href="{{ path('app_logout') }}">Déconnexion</a>
-							{% else %}
-								<a href="{{ path('app_login') }}">Connexion</a>
-								|
-								<a href="{{ path('app_register') }}">Inscription</a>
-							{% endif %}
-						</span>
+
 					</div>
-				</div>
-			</nav>
+				</nav>
+			</div>
 		</header>
 		<main class="container" role="main">
 			{% for message in app.flashes('notification') %}
@@ -58,18 +89,13 @@
 			{% endfor %}
 			{% block body %}{% endblock %}
 		</main>
-		<footer class="text-center">
-			<p>&copy; 2021 SnowTricks<br>
-				<small>
-					<a href="#">Conditions d'utilisations</a>
-					&middot;
-					<a href="#">Mension légales</a>
-				</small>
-			</p>
+		<footer class="container">
+			<hr class="my-4">
+			<p class="text-left">&copy; 2021 SnowTricks</p>
 		</footer>
 		{% block script %}
 			<script type="html/javascript"></script>
 		{% endblock %}
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 	</body>
-</html>
+</html></body></html>

@@ -45,6 +45,18 @@ class AppFixtures extends Fixture
             $categories[] = $category;
         }
 
+        // Create 1 spécific user
+        $user = new User();
+        $user->setFirstname('thomas');
+        $user->setLastname('sewogi');
+        $user->setEmail('thomas@gmail.com');
+        $user->setIsVerified(true);
+
+        $user->setPassword($this->passwordHasher->hashPassword(
+            $user,
+            '123456'
+        ));
+        $manager->persist($user);
 
 
         // Create 11 figures
@@ -56,6 +68,7 @@ class AppFixtures extends Fixture
             $figure->setTitle('figure ' . $j)
                 ->setSlug('figure-' . $j)
                 ->setContent('La description en détails de ma figure numero ' . $j)
+                ->setCreatedAt($today)
                 ->setPublishedAt($tomorrow)
                 ->setCategory($categories[array_rand($categories)]);
 
@@ -81,53 +94,24 @@ class AppFixtures extends Fixture
                 $manager->persist($video);
             }
 
+            // Create * comment
+            for ($k = 0; $k < mt_rand(4, 15); $k++) {
+                $mots = ['Salut super figure !!', 'Bonjour j\'adore !', 'Pas mal...', 'Pas ouf du tout.', 'Bravo!!', 'Génial!', 'Continue.'];
+                $num = rand(0, 3);
+                $comment = new Comment();
+                $today = new DateTime();
+                $tomorrow = $today->modify('+1 day');
+                $comment->setMessage($mots[$num]);
+                $comment->setCreatedAt($tomorrow);
+                $comment->setFigure($figure);
+                $comment->setUser($user);
+
+                $manager->persist($comment);
+            }
+
 
             $manager->persist($figure);
             $figures[] = $figure;
-        }
-
-        // Create 1 spécific user
-        $user = new User();
-        $user->setFirstname('thomas');
-        $user->setLastname('sewogi');
-        $user->setEmail('thomas@gmail.com');
-        $user->setIsVerified(true);
-
-        $user->setPassword($this->passwordHasher->hashPassword(
-            $user,
-            '123456'
-        ));
-        $manager->persist($user);
-
-        // Create 2 user
-        for ($i = 0; $i < 2; $i++) {
-            $user = new User();
-            $user->setFirstname('prenom' . $i);
-            $user->setLastname('nom' . $i);
-            $user->setEmail('user' . $i . '@gmail.com');
-            $user->setIsVerified(true);
-
-            $user->setPassword($this->passwordHasher->hashPassword(
-                $user,
-                '123456' . $i
-            ));
-            $manager->persist($user);
-        }
-
-        // Create * comment
-
-        for ($k = 0; $k < 100; $k++) {
-            $mots = ['Salut super figure !!', 'Bonjour j\'adore !', 'Pas mal...', 'Pas ouf du tout.', 'Bravo!!', 'Génial!', 'Continue.'];
-            $num = rand(0, 3);
-            $comment = new Comment();
-            $today = new DateTime();
-            $tomorrow = $today->modify('+1 day');
-            $comment->setMessage($mots[$num]);
-            $comment->setCreatedAt($tomorrow);
-            $comment->setFigure($figures[array_rand($figures)]);
-            $comment->setUser($user);
-
-            $manager->persist($comment);
         }
 
         $manager->flush();
