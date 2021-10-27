@@ -24,6 +24,7 @@ class FigureManager extends AbstractController
         //generate slug
         $slugger = new AsciiSlugger();
         $figure->setSlug($slugger->slug($figure->getTitle()));
+        $figure->setUser($this->getUser());
 
         //manage uploads
         foreach ($images as $image) {

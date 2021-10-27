@@ -40,11 +40,10 @@ class FigureVoter extends Voter
 
         if ($this->security->isGranted('ROLE_ADMIN')) return true;
 
-        if (null === $figure->getUser()) return false;
-
         // ... (check conditions and return true to grant permission) ...
         switch ($attribute) {
             case self::FIGURE_ADD:
+                return true;
                 break;
             case self::FIGURE_EDIT:
                 return $this->canEdit($figure, $user);
